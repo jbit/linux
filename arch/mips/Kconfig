@@ -1075,6 +1075,27 @@ config MIPS_PARAVIRT
 	help
 	  This option supports guest running under ????
 
+config RTL819X_SOC
+	bool "Realtek RTL819X SoCs"
+	select BOOT_RAW
+	select DMA_NONCOHERENT
+	select IRQ_MIPS_CPU
+	select SYS_HAS_CPU_R3000
+	select CPU_RLX
+	select COMMON_CLK
+	select HAVE_PCI
+	select SYS_SUPPORTS_BIG_ENDIAN
+	select SYS_SUPPORTS_32BIT_KERNEL
+	select SYS_SUPPORTS_MIPS16
+	select SYS_HAS_EARLY_PRINTK
+	select SYS_SUPPORTS_ZBOOT
+	select SYS_SUPPORTS_ZBOOT_UART16550
+	select USE_GENERIC_EARLY_PRINTK_8250
+	select USE_OF
+	select TIMER_OF
+	help
+	  Support for Realtek RTL819X SoCs
+
 endchoice
 
 source "arch/mips/alchemy/Kconfig"
@@ -1092,6 +1113,7 @@ source "arch/mips/pic32/Kconfig"
 source "arch/mips/pistachio/Kconfig"
 source "arch/mips/pmcs-msp71xx/Kconfig"
 source "arch/mips/ralink/Kconfig"
+source "arch/mips/rtl819x/Kconfig"
 source "arch/mips/sgi-ip27/Kconfig"
 source "arch/mips/sibyte/Kconfig"
 source "arch/mips/txx9/Kconfig"
@@ -1828,6 +1850,7 @@ config CPU_XLP
 	select MIPS_ASID_BITS_VARIABLE
 	help
 	  Netlogic Microsystems XLP processors.
+
 endchoice
 
 config CPU_MIPS32_3_5_FEATURES
@@ -2071,6 +2094,9 @@ config SYS_HAS_CPU_XLR
 	bool
 
 config SYS_HAS_CPU_XLP
+	bool
+
+config CPU_RLX
 	bool
 
 #

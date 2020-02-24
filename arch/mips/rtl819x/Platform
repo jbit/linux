@@ -1,0 +1,5 @@
+platform-$(CONFIG_RTL819X_SOC)  := rtl819x/
+all-$(CONFIG_RTL819X_SOC)       := $(COMPRESSION_FNAME).bin
+load-$(CONFIG_RTL819X_SOC)      := 0xffffffff80000000
+zload-$(CONFIG_RTL819X_SOC)     := 0xffffffff80500000
+cflags-$(CONFIG_RTL819X_SOC)    += -I$(srctree)/arch/mips/include/asm/mach-rtl819x

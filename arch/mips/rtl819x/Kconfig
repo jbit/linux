@@ -1,0 +1,18 @@
+if RTL819X_SOC
+
+choice
+	prompt "RTL819X Built-in device tree"
+	default DTB_RTL819X_SOC_NONE
+	help
+	  Select the devicetree.
+
+	config DTB_RTL819X_SOC_NONE
+		bool "None"
+
+	config DTB_RTL8198_RTL8192CE
+		bool "RTL8198 SoC paired with RTL8192CE Wi-Fi"
+		select BUILTIN_DTB
+endchoice
+
+
+endif

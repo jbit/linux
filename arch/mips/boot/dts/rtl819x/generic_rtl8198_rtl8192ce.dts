@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
+/dts-v1/;
+
+#include "rtl8198.dtsi"
+
+/ {
+	compatible = "realtek,generic-rtl8198-rtl8192ce", "realtek,rtl8198-soc", "realtek,rtl819x-soc";
+	model = "Generic RTL8198 + RTL8192CE board";
+
+	chosen {
+		stdout-path = &serial0;
+		bootargs = "console=ttyS0,38400 kgdboc=ttyS0,38400 kgdbreboot=3 memtest=3 print_fatal_signals=1 debug";
+	};
+};

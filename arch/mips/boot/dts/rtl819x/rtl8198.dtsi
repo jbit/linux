@@ -1,0 +1,211 @@
+// SPDX-License-Identifier: GPL-2.0
+
+
+#define INT_OCP_TIMEOUT 7
+#define INT_TIMER0      8
+#define INT_TIMER1      9
+#define INT_USB_HOST    10
+#define INT_UART0       12
+#define INT_UART1       13
+#define INT_SWITCH      15
+#define INT_GPIO_ABCD   16
+#define INT_GPIO_EFGH   17
+#define INT_NFBI        18
+#define INT_CRYPTO      20
+#define INT_PCIE0       21
+#define INT_PCIE1       22
+#define INT_CPU_WAKE    27
+#define INT_USB_WAKE    28
+
+
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+	compatible = "realtek,rtl8198-soc", "realtek,rtl819x-soc";
+
+	aliases {
+		serial0 = &serial0;
+		serial1 = &serial1;
+	};
+
+	cpus {
+		cpu@0 {
+			compatible = "mips,r3000";
+		};
+	};
+
+	cpuintc: cpuintc {
+		#address-cells = <0>;
+		#interrupt-cells = <1>;
+		interrupt-controller;
+		compatible = "mti,cpu-interrupt-controller";
+	};
+
+	lopiintc: lopiintc {
+		#address-cells = <0>;
+		#interrupt-cells = <1>;
+		interrupt-controller;
+		compatible = "lexra,lopi";
+	};
+
+	lexrabus {
+		compatible = "simple-bus";
+		ranges;
+
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		interrupt-parent = <&socintc>;
+
+		syscrtl@18000000 {
+			compatible = "realtek,rtl819x-soc-syscrtl";
+			reg = <0x18000000 0x1000>;
+		};
+
+		memc@18001000 {
+			compatible = "realtek,rtl819x-soc-memcrtl";
+			reg = <0x18001000 0x1000>;
+		};
+
+		serial0: uart0@18002000 {
+			compatible = "realtek,rtl819x-soc-uart", "ns16550";
+			reg = <0x18002000 0x100>;
+			interrupts = <INT_UART0>;
+			reg-shift = <2>;
+			clock-frequency = <200000000>;
+		};
+
+		serial1: uart1@18002100 {
+			compatible = "realtek,rtl819x-soc-uart", "ns16550";
+			reg = <0x18002100 0x100>;
+			interrupts = <INT_UART1>;
+			reg-shift = <2>;
+			clock-frequency = <200000000>;
+		};
+
+		socintc: interrupt-controller@18003000 {
+			compatible = "realtek,rtl819x-soc-intc";
+			reg = <0x18003000 0x100>;
+			interrupt-parent = <&cpuintc>;
+			interrupts = <2>;
+			interrupt-controller;
+			#interrupt-cells = <1>;
+		};
+
+		timer@18003100 {
+			compatible = "realtek,rtl819x-soc-timer";
+			reg = <0x18003100 0x100>;
+			interrupts = <INT_TIMER0 INT_TIMER1>;
+			interrupt-names = "irq_timer0", "irq_timer1";
+			clock-frequency = <200000000>;
+			clock-div = <2>;
+			shift = <4>;
+		};
+
+		gpio@18003500 {
+			compatible = "realtek,rtl819x-soc-gpio";
+			reg = <0x18003500 0x1C>;
+			interrupts = <INT_GPIO_ABCD>;
+		};
+
+		gpio@1800351c {
+			compatible = "realtek,rtl819x-soc-gpio";
+			reg = <0x1800351c 0x1C>;
+			interrupts = <INT_GPIO_EFGH>;
+		};
+
+		dma@1800b000 {
+			compatible = "realtek,rtl819x-soc-dma2";
+			reg = <0x1800b000 0x100>;
+		};
+
+		crypto@1800c000 {
+			compatible = "realtek,rtl819x-soc-crypto";
+			reg = <0x1800c000 0x100>;
+			interrupts = <INT_CRYPTO>;
+		};
+
+		nic@18010000 {
+			compatible = "realtek,rtl819x-soc-nic";
+			reg = <0x18019000 0x100>;
+			interrupts = <INT_NFBI>;
+		};
+
+		nfbi@18019000 {
+			compatible = "realtek,rtl819x-soc-nfbi";
+			reg = <0x18019000 0x100>;
+			interrupts = <INT_NFBI>;
+		};
+
+		ohci@18020000 {
+			compatible = "realtek,rtl819x-soc-ohci", "generic-ohci";
+			reg = <0x18020000 0x100>;
+			interrupts = <INT_USB_HOST>;
+		};
+
+		ehci@18021000 {
+			compatible = "realtek,rtl819x-soc-ehci", "generic-ehci";
+			reg = <0x18021000 0x100>;
+			interrupts = <INT_USB_HOST>;
+		};
+
+		pcie0: pcie@18b00000 {
+			compatible = "realtek,rtl819x-pcie";
+			reg = <
+				0x18b00000 0x1000 //dbi
+				0x18b01000 0x1000 //ext
+				0x18b10000 0x1000 //config0
+				0x18b11000 0x1000 //config1
+			>;
+			reg-names = "dbi", "ext", "config0", "config1";
+			// io  space: 0x18c00000 + 0x0200000 (2MB)
+			// mem space: 0x19000000 + 0x1000000 (16MB)
+
+			interrupts = <INT_PCIE0>;
+		};
+
+		pcie1: pcie@18b20000 {
+			compatible = "realtek,rtl819x-pcie";
+			reg = <
+				0x18b20000 0x1000 //dbi
+				0x18b21000 0x1000 //ext
+				0x18b30000 0x1000 //config0
+				0x18b31000 0x1000 //config1
+			>;
+			reg-names = "dbi", "ext", "config0", "config1";
+			// io  space: 0x18e00000 + 0x0200000 (2MB)
+			// mem space: 0x1a000000 + 0x1000000 (16MB)
+
+			interrupts = <INT_PCIE1>;
+		};
+
+		switch@1b000000 {
+			compatible = "realtek,rtl819x-soc-switch";
+			reg = <0x1b000000 0x2000000>;
+
+			// vlan table:   0x1b060000 0x1ffff
+			// global port:  0x1b804000
+			// per port:     0x1b804100
+			// misc:         0x1b804200
+			// LED Control:  0x1b804300
+			// addr lookup:  0x1b804400
+			// vlan control: 0x1b804a00
+			// table access: 0x1b804d00
+			interrupts = <INT_SWITCH>;
+		};
+
+		spirom@1d000000 {
+			compatible = "mtd-rom";
+			probe-type = "map_rom";
+			reg = <0x1d000000 0x02000000>;
+			bank-width = <4>;
+			device-width = <1>;
+		};
+
+		ejtag@ff220000 {
+			compatible = "realtek,rtl819x-soc-ejtag";
+			reg = <0xff220000 0x200000>;
+		};
+	};
+};

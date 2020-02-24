@@ -35,6 +35,11 @@
 #define IOTYPE unsigned int
 #endif
 
+#ifdef CONFIG_CPU_RLX
+#include <rtl819x-soc.h>
+#define PORT(offset) (RTL819X_SOC_UART0 + (4 * offset))
+#endif
+
 #ifndef IOTYPE
 #define IOTYPE char
 #endif

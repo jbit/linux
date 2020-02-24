@@ -11,6 +11,7 @@ subdir-y	+= ni
 subdir-y	+= pic32
 subdir-y	+= qca
 subdir-y	+= ralink
+subdir-y	+= rtl819x
 subdir-y	+= xilfpga
 
 obj-$(CONFIG_BUILTIN_DTB)	:= $(addsuffix /, $(subdir-y))

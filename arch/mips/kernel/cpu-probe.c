@@ -28,6 +28,7 @@
 #include <asm/spram.h>
 #include <linux/uaccess.h>
 
+
 /* Hardware capabilities */
 unsigned int elf_hwcap __read_mostly;
 EXPORT_SYMBOL_GPL(elf_hwcap);
@@ -1263,8 +1264,29 @@ static inline void cpu_probe_vz(struct cpuinfo_mips *c)
 #define R4K_OPTS (MIPS_CPU_TLB | MIPS_CPU_4KEX | MIPS_CPU_4K_CACHE \
 		| MIPS_CPU_COUNTER)
 
+static inline void cpu_probe_lexra(struct cpuinfo_mips *c, int cpu)
+{
+	switch (c->processor_id & PRID_IMP_MASK) {
+	case PRID_IMP_LX4180:   __cpu_name[cpu] = "Lexra LX4180";       break;
+	case PRID_IMP_LX4280:   __cpu_name[cpu] = "Lexra LX4280";       break;
+	case PRID_IMP_LX4189:   __cpu_name[cpu] = "Lexra LX4189";       break;
+	case PRID_IMP_LX5180:   __cpu_name[cpu] = "Lexra LX5180";       break;
+	case PRID_IMP_LX5280:   __cpu_name[cpu] = "Lexra LX5280";       break;
+	case PRID_IMP_RLX5821:  __cpu_name[cpu] = "Realtek RLX5821";    break;
+	default:                __cpu_name[cpu] = "Lexra Unknown";      break;
+	}
+	c->cputype      = CPU_R3000;
+	c->fpu_id       = FPIR_IMP_NONE;
+	c->options      = MIPS_CPU_TLB | MIPS_CPU_3K_CACHE | MIPS_CPU_NOFPUEX;
+	c->ases         = MIPS_ASE_MIPS16;
+	c->tlbsize      = 32;
+	c->icache.ways  = 2;
+	c->dcache.ways  = 2;
+}
+
 static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
 {
+	unsigned int imp_top = c->processor_id & 0xf000;
 	switch (c->processor_id & PRID_IMP_MASK) {
 	case PRID_IMP_R2000:
 		c->cputype = CPU_R2000;
@@ -1579,6 +1601,11 @@ static inline void cpu_probe_legacy(struct cpuinfo_mips *c, unsigned int cpu)
 			break;
 		}
 
+		break;
+	default:
+		if ((imp_top == PRID_IMP_LEXRA_BASE) || (imp_top == PRID_IMP_REALTEK_BASE)) {
+			cpu_probe_lexra(c, cpu);
+		}
 		break;
 	}
 }

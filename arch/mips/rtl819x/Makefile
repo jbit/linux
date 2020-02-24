@@ -1,0 +1,1 @@
+obj-y += setup.o lopi.o lopi-vectors.o irq.o timer.o

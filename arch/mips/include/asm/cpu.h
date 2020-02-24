@@ -94,7 +94,14 @@
 #define PRID_IMP_LOONGSON_64R	0x6100  /* Reduced Loongson-2 */
 #define PRID_IMP_LOONGSON_64C	0x6300  /* Classic Loongson-2 and Loongson-3 */
 #define PRID_IMP_LOONGSON_64G	0xc000  /* Generic Loongson-2 and Loongson-3 */
-
+#define PRID_IMP_LEXRA_BASE	0xc000
+#define PRID_IMP_LX4180		0xc100
+#define PRID_IMP_LX4280		0xc200
+#define PRID_IMP_LX4189		0xc400
+#define PRID_IMP_LX5180		0xc500
+#define PRID_IMP_LX5280		0xc600
+#define PRID_IMP_REALTEK_BASE	0xd000
+#define PRID_IMP_RLX5821	0xdc00
 #define PRID_IMP_UNKNOWN	0xff00
 
 /*
